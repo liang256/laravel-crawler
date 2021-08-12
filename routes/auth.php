@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\Auth\SocialController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/register', [RegisteredUserController::class, 'create'])
@@ -62,3 +63,15 @@ Route::post('/confirm-password', [ConfirmablePasswordController::class, 'store']
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
                 ->middleware('auth')
                 ->name('logout');
+
+//將用戶重新導向至OAuth提供程序
+Route::get('login/facebook', [SocialController::class, 'googleAuth'])->name('login.facebook');
+
+//在身份驗證之後接收來自提供程序的回調。
+Route::get('login/facebook/callback', [SocialController::class, 'googleAuthCallback'])->name('login.facebook.callback');
+
+//將用戶重新導向至OAuth提供程序
+Route::get('login/google', [SocialController::class, 'fbAuth'])->name('login.google');
+
+//在身份驗證之後接收來自提供程序的回調。
+Route::get('login/google/callback', [SocialController::class, 'fbAuthCallback'])->name('login.google.callback');
