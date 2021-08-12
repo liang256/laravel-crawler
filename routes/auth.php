@@ -65,13 +65,13 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
                 ->name('logout');
 
 //將用戶重新導向至OAuth提供程序
-Route::get('login/facebook', [SocialController::class, 'googleAuth'])->name('login.facebook');
+Route::get('login/facebook', [SocialController::class, 'fbAuth'])->name('login.facebook');
 
 //在身份驗證之後接收來自提供程序的回調。
-Route::get('login/facebook/callback', [SocialController::class, 'googleAuthCallback'])->name('login.facebook.callback');
+Route::get('login/facebook/callback', [SocialController::class, 'fbAuthCallback'])->name('login.facebook.callback');
 
 //將用戶重新導向至OAuth提供程序
-Route::get('login/google', [SocialController::class, 'fbAuth'])->name('login.google');
+Route::get('login/google', [SocialController::class, 'googleAuth'])->name('login.google');
 
 //在身份驗證之後接收來自提供程序的回調。
-Route::get('login/google/callback', [SocialController::class, 'fbAuthCallback'])->name('login.google.callback');
+Route::get('login/google/callback', [SocialController::class, 'googleAuthCallback'])->name('login.google.callback');
