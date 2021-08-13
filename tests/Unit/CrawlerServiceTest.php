@@ -6,7 +6,9 @@ use Tests\TestCase;
 
 class CrawlerServiceTest extends TestCase
 {
-    /** @var  CrawlerService */
+    /**
+     * @var CrawlerService 
+     */
     private $crawlerService;
 
 

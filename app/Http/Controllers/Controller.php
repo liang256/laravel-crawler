@@ -14,13 +14,17 @@ class Controller extends BaseController
 
     public function index()
     {
-        $models = AstroFortune::where([
+        $models = AstroFortune::where(
+            [
             'type' => 1,
             'time_range' => today()->format('Y-m-d')
-        ])->get();
+            ]
+        )->get();
 
-        return view('dashboard', [
+        return view(
+            'dashboard', [
             'models' => $models
-        ]);
+            ]
+        );
     }
 }

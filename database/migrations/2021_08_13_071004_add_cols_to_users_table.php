@@ -13,9 +13,11 @@ class CreateAstroFortunesTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function($table) {
-            $table->string('source');
-        });
+        Schema::table(
+            'users', function ($table) {
+                $table->string('source');
+            }
+        );
     }
 
     /**
@@ -25,8 +27,10 @@ class CreateAstroFortunesTable extends Migration
      */
     public function down()
     {
-        Schema::table('users', function($table) {
-            $table->dropColumn('source');
-        });
+        Schema::table(
+            'users', function ($table) {
+                $table->dropColumn('source');
+            }
+        );
     }
 }

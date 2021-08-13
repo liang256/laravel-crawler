@@ -10,7 +10,9 @@ use Illuminate\Support\Collection;
 
 class AstroCrawlerService
 {
-    /** Available fields */
+    /**
+     * Available fields 
+     */
     public const AVAILABLE_FIELDS = [
         "general",
         "love",
@@ -18,12 +20,16 @@ class AstroCrawlerService
         "wealth"
     ];
 
-    /** Fortune range type */
+    /**
+     * Fortune range type 
+     */
     public const DAY   = 0;
     public const WEEK  = 1;
     public const MONTH = 2;
 
-    /** Asrto codes */
+    /**
+     * Asrto codes 
+     */
     public const ARIES       = 0;
     public const TAURUS      = 1;
     public const GEMINI      = 2;
@@ -37,26 +43,38 @@ class AstroCrawlerService
     public const AQUARIUS    = 10;
     public const PISCES      = 11;
 
-    /** @var Client */
+    /**
+     * @var Client 
+     */
     private $client;
 
-    /** @var array astro code */
+    /**
+     * @var array astro code 
+     */
     private $range_type;
 
-    /** @var array astro code */
+    /**
+     * @var array astro code 
+     */
     private $astro_list;
 
-    /** @var array date */
+    /**
+     * @var array date 
+     */
     private $date_list;
 
-    /** @var array field */
+    /**
+     * @var array field 
+     */
     private $field_list;
 
     public function __construct()
     {
-        $this->client = new Client([
+        $this->client = new Client(
+            [
             'base_uri' => 'http://astro.click108.com.tw/daily.php'
-        ]);
+            ]
+        );
         $this->range_type = self::DAY;
         $this->date_list  = [today()->format('Y-m-d')];
         $this->astro_list = range(0, 11);
@@ -64,7 +82,7 @@ class AstroCrawlerService
     }
 
     /**
-     * @param int $type
+     * @param  int $type
      * @return Collection
      */
     public function crawl()
@@ -73,38 +91,38 @@ class AstroCrawlerService
         // Send request depends on range type
         foreach ($this->astro_list as $astro_code) {
             switch ($this->range_type) {
-                case self::DAY:
-                    foreach ($this->date_list as $date) {
-                        $params = [
-                            'iType' => self::DAY,
-                            'iAstro' => $astro_code,
-                            'iAcDay' => $date
-                        ];
-                        $model = $this->crawlAndParse($params);
-                        $models[] = $model;
-                    }
-                    break;
-                case self::WEEK:
+            case self::DAY:
+                foreach ($this->date_list as $date) {
                     $params = [
-                        'iType' => self::WEEK,
+                        'iType' => self::DAY,
                         'iAstro' => $astro_code,
+                        'iAcDay' => $date
                     ];
-                    $models[] = $this->crawlAndParse($params);
-                    break;
-                case self::MONTH:
-                    $params = [
-                        'iType' => self::MONTH,
-                        'iAstro' => $astro_code,
-                    ];
-                    $models[] = $this->crawlAndParse($params);
-                    break;
+                    $model = $this->crawlAndParse($params);
+                    $models[] = $model;
+                }
+                break;
+            case self::WEEK:
+                $params = [
+                    'iType' => self::WEEK,
+                    'iAstro' => $astro_code,
+                ];
+                $models[] = $this->crawlAndParse($params);
+                break;
+            case self::MONTH:
+                $params = [
+                    'iType' => self::MONTH,
+                    'iAstro' => $astro_code,
+                ];
+                $models[] = $this->crawlAndParse($params);
+                break;
             }
         }
         return collect($models);
     }
 
     /**
-     * @param array $params query for GET request
+     * @param  array $params query for GET request
      * @return AstroFortune
      */
     public function crawlAndParse(array $params)
@@ -125,23 +143,23 @@ class AstroCrawlerService
         
         // Parse time range
         switch ($params["iType"]) {
-            case self::DAY:
-                $date = $crawler->filter('select#iAcDay option:selected');
+        case self::DAY:
+            $date = $crawler->filter('select#iAcDay option:selected');
 
-                // 檢查結果是否為請求日期，若不符合回傳無當日運勢
-                if (isset($params['iAcDay']) && $params['iAcDay'] !== $date->text()) {
-                    throw new Exception("No fortune for the date.");
-                }
+            // 檢查結果是否為請求日期，若不符合回傳無當日運勢
+            if (isset($params['iAcDay']) && $params['iAcDay'] !== $date->text()) {
+                throw new Exception("No fortune for the date.");
+            }
 
-                $time_range = (is_null($date->getNode(0))) ? null : $date->text();
-                break;
-            case self::MONTH:
-                $time_range = today()->format('Y-m');
-                break;
-            case self::WEEK:
-                // TODO: parse real value of this week
-                $time_range = 'THIS WEEK';
-                break;
+            $time_range = (is_null($date->getNode(0))) ? null : $date->text();
+            break;
+        case self::MONTH:
+            $time_range = today()->format('Y-m');
+            break;
+        case self::WEEK:
+            // TODO: parse real value of this week
+            $time_range = 'THIS WEEK';
+            break;
         }
 
         // Parse name
@@ -176,12 +194,14 @@ class AstroCrawlerService
         );
 
         // Assgin data to model
-        $model = AstroFortune::where([
+        $model = AstroFortune::where(
+            [
             'name' => $astro_name,
             'code' => $params['iAstro'],
             'type' => $this->range_type + 1,
             'time_range' => $time_range
-        ])
+            ]
+        )
         ->firstOrNew();
   
         $model->name = $astro_name;
@@ -247,20 +267,20 @@ class AstroCrawlerService
     {
         $field = "";
         switch ($input_field) {
-            case "整體運勢":
-                $field = "general";
-                break;
-            case "愛情運勢":
-                $field = "love";
-                break;
-            case "事業運勢":
-                $field = "career";
-                break;
-            case "財運運勢":
-                $field = "wealth";
-                break;
-            default:
-                throw new Exception("Unknow field given.");
+        case "整體運勢":
+            $field = "general";
+            break;
+        case "愛情運勢":
+            $field = "love";
+            break;
+        case "事業運勢":
+            $field = "career";
+            break;
+        case "財運運勢":
+            $field = "wealth";
+            break;
+        default:
+            throw new Exception("Unknow field given.");
         }
 
         return $field;

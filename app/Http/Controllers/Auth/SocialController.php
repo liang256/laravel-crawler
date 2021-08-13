@@ -37,12 +37,14 @@ class SocialController extends Controller
             );
         } else {
             // 沒找到，自動註冊
-            $user = User::create([
+            $user = User::create(
+                [
                 'name' => $user->getName(),
                 'email' => $user->getEmail(),
                 'password' => Hash::make(uniqid('FB_')),
                 'source' => 'facebook',
-            ]);
+                ]
+            );
             // $user->attachRole('member');
             Auth::guard('web')->login(
                 User::where('email', $user->getEmail())->first()

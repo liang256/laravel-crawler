@@ -56,9 +56,11 @@ class CrawlCommand extends Command
         $models = $this->crawlerService->setType($type)->crawl();
 
         try {
-            $models->each(function($item) {
-                $item->save();
-            });
+            $models->each(
+                function ($item) {
+                    $item->save();
+                }
+            );
         } catch (\Throwable $th) {
             $this->error($th->getMessage());
             return 1;
