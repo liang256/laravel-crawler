@@ -14,11 +14,8 @@ use App\Http\Controllers\Controller;
 |
 */
 
-Route::get('/', function () {
-    return view('auth.login');
-});
-
 Route::middleware('auth')->group(function () {
+    Route::get('/', [Controller::class, 'index']);
     Route::get('/dashboard', [Controller::class, 'index'])->name('dashboard');
 });
 
