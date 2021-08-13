@@ -56,18 +56,18 @@
             </div>
         </form>
 
-        <div class="flex items-center justify-between mt-4">
+        <div class="flex items-center justify-end mt-4">
             <form method="GET" action="{{ route('login.facebook') }}">
                 <x-button class="ml-4">
                     Facebook 帳號註冊
                 </x-button>
             </form>
 
-            <form method="GET" action="{{ route('login.google') }}">
+            <!-- <form method="GET" action="{{ route('login.google') }}">
                 <x-button class="ml-4">
                     Google 帳號註冊
                 </x-button>
-            </form>
+            </form> -->
         </div>
 
     </x-auth-card>

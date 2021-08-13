@@ -52,5 +52,19 @@
                 </x-button>
             </div>
         </form>
+
+        <div class="flex items-center justify-between mt-4">
+            <form method="GET" action="{{ route('login.facebook') }}">
+                <x-button class="ml-4">
+                    Facebook 帳號註冊
+                </x-button>
+            </form>
+
+            <form method="GET" action="{{ route('register') }}">
+                <x-button class="ml-4">
+                    註冊
+                </x-button>
+            </form>
+        </div>
     </x-auth-card>
 </x-guest-layout>
