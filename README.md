@@ -57,7 +57,7 @@ $date = today()->format('Y-m-d');
 $models = $service->setType(0)->setDate($date)->crawl();
 ```
 
-### select()
+### select
 
 Select what columns to crawl like SQL language. By default, this service will crawl all 4 columns
 
