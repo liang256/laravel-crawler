@@ -61,7 +61,7 @@ $models = $service->setType(0)->setDate($date)->crawl();
 
 Select what columns to crawl like SQL language. By default, this service will crawl all 4 columns
 
->genral: 整體運勢
+>general: 整體運勢
 >love: 愛情運勢
 >career: 事業運勢
 >wealth: 財運運勢
