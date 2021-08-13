@@ -1,63 +1,71 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# About Laravel-Crawler
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Features
+- Facebook OAuth login
+- AstroCrawler to crawl this website's daily astro fortunes
 
-## About Laravel
+## Usage of AstroCrawlerService
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+It is very simpler to use.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+This sample crawl today's fortune of 12 astros and return a `collection` of `AstroFortune` models.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+``` php
+$service = new AstroCrawlerService();
+$models = $service->crawl();
+```
 
-## Learning Laravel
+To save them into DB, you can achieve it by easily using `each` provided by `collection`.
+``` php
+$models->each(funciton ($model) {
+    $model->save();
+});
+```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### setType
+There are 3 types of this crawler
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+>0. fortune of a date in this week
+>1. fortune of this week
+>2. fortune of this month
 
-## Laravel Sponsors
+To set the type of fortune to crawl
+``` php
+$models = $service->setType(2)->crawl();
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+### setAstros & setAstro
+By default, this service will crawl all 12 astros, but we can specific which astros to crawl by these 2 functions.
 
-### Premium Partners
+`AstroCrawlerService` provides const variables to easily choose astros.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[CMS Max](https://www.cmsmax.com/)**
+``` php
+use AstroCrawlerService as ACS
+$models = $service->setType(2)->setAstro(ACS::GEMINI)->crawl();
+```
 
-## Contributing
+``` php
+$models = $service->setType(2)->setAstro([0, 2, 4])->crawl();
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### setDate
 
-## Code of Conduct
+This function only be useful when "fortune of a date" (type 0)
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+``` php
+$date = today()->format('Y-m-d');
+$models = $service->setType(0)->setDate($date)->crawl();
+```
 
-## Security Vulnerabilities
+### select()
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Select what columns to crawl like SQL language. By default, this service will crawl all 4 columns
 
-## License
+>genral: 整體運勢
+>love: 愛情運勢
+>career: 事業運勢
+>wealth: 財運運勢
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+``` php
+$models = $service->setType(2)->select(['love', 'general'])->crawl();
+```
