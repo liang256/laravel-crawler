@@ -45,7 +45,7 @@ $models = $service->setType(2)->setAstro(ACS::GEMINI)->crawl();
 ```
 
 ``` php
-$models = $service->setType(2)->setAstro([0, 2, 4])->crawl();
+$models = $service->setType(2)->setAstros([0, 2, 4])->crawl();
 ```
 
 ### setDate
