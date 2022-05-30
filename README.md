@@ -2,7 +2,7 @@
 
 ## Features
 - Facebook OAuth login
-- AstroCrawler to crawl [this website](http://astro.click108.com.tw/)'s daily astro fortunes
+- AstroCrawler is a tool to crawl [this website](http://astro.click108.com.tw/)'s daily astro fortunes
 
 ## Usage of AstroCrawlerService
 
